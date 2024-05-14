@@ -49,6 +49,7 @@
             name = "wonkyhonky_therac_sim_shell";
             stdenv = pkgs.llvmPackages_18.libcxxStdenv;
             packages = with pkgs; [
+              haskell.compiler.ghc98
               # Development Tools
               #            llvmPackages_18.clang
               (clang-tools.override { llvmPackages = llvmPackages_18; })
@@ -63,56 +64,14 @@
               ninja
               # Development time dependencies
               #            gtest
-              vulkan-validation-layers
               # Build time and Run time dependencies
-              pipewire
-              libmpg123
-              opusfile
-              libogg
-              libopus
-              libvorbis
-              ffmpeg
-              alsa-lib
-              flac
-              fftw
-              fmt
-              fmt_8
-              libsndfile
-              (rtmidi.override { stdenv = pkgs.llvmPackages_18.libcxxStdenv; })
-              SDL2
-              zlib
-              sqlite
-              portaudio
-              vulkan-loader
-              vulkan-headers
-              vulkan-tools
-              pkg-config
-              xorg.libX11
-              libdrm
-              libxkbcommon
-              xorg.libXext
-              xorg.libXv
-              xorg.libXrandr
-              xorg.libxcb
-              #            gtk3
-              libuuid
-              wayland
-              pulseaudio
-              #            spdlog
-              #            abseil-cpp
             ];
             nativeBuildInputs = packages;
-            # Setting up the environment variables you need during
-            # development.
-            #      shellHook = let
-            #        icon = "f121";
-            #      in ''
-            #        export PS1="$(echo -e '\u${icon}') {\[$(tput sgr0)\]\[\033[38;5;228m\]\w\[$(tput sgr0)\]\[\033[38;5;15m\]} (${name}) \\$ \[$(tput sgr0)\]"
-            #      '';
+
           };
 
         packages.default = pkgs.callPackage ./default.nix {
-          #          stdenv = pkgs.llvmPackages_18.libcxxStdenv;
+
         };
       });
 }

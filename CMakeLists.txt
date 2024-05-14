@@ -20,15 +20,6 @@ list( APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/" )
 set( CMAKE_INTERPROCEDURAL_OPTIMIZATION_RELEASE ON )
 #set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 
-#set(BUILD_GUI=ON SYSTEM_FFTW=ON SYSTEM_FMT=OFF SYSTEM_LIBSNDFILE=ON SYSTEM_RTMIDI=ON SYSTEM_SDL2=ON SYSTEM_ZLIB=ON SYSTEM_PORTAUDIO=ON WITH_PORTAUDIO=ON WITH_RENDER_SDL=ON WITH_RENDER_OPENGL=ON)
-#furnace
-add_subdirectory(extern/furnace)
-
-add_subdirectory(extern/rustex)
-add_subdirectory(extern/ctre)
-add_subdirectory(extern/frozen)
-add_subdirectory(extern/GSL)
-
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 if(CMAKE_EXPORT_COMPILE_COMMANDS)
   set(CMAKE_CXX_STANDARD_INCLUDE_DIRECTORIES 
@@ -66,6 +57,8 @@ if ( APPLE )
     set( LIB_ARCH "universal" )
 endif()
 
+
+
 # LIB_DIR is where the actual library ends up. This is used in both the build directory and the
 # install directory and needs to be consistent with the paths in the gdextension file.
 #   e.g. linux.release.x86_64 = "lib/Linux-x86_64/libGDExtensionTemplate.so"
@@ -98,23 +91,6 @@ add_custom_command(
             "${CMAKE_SOURCE_DIR}/support_files"
             ${BUILD_OUTPUT_DIR}
 )
-if(LINUX)
-  add_custom_command(
-    TARGET ${PROJECT_NAME} POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy
-    $<TARGET_FILE:furnace>
-    "${BUILD_OUTPUT_DIR}/${LIB_DIR}/"
-  )
-endif()
-
-file(MAKE_DIRECTORY "${BUILD_OUTPUT_DIR}/testres")
-add_custom_command(
-  TARGET ${PROJECT_NAME} POST_BUILD
-  COMMAND ${CMAKE_COMMAND} -E copy
-  "${PROJECT_SOURCE_DIR}/extern/furnace/demos/genesis/MegadriveOverdrive.fur"
-  "${BUILD_OUTPUT_DIR}/testres/"
-)
-
 
 # Warnings
 include( CompilerWarnings )
@@ -164,6 +140,18 @@ endif()
 
 set( GODOT_CPP_SYSTEM_HEADERS ON CACHE BOOL "" FORCE )
 
+# haskell stuff
+set(ghc_version 9.8.2)
+set(ghc_rts_ver 1.0.2)
+set(therac_sim_ver 0.1.0.0)
+find_path(HSINCLUDES NAMES "HsFFI.h" PATH_SUFFIXES "lib/ghc-${ghc_version}/lib/x86_64-linux-ghc-${ghc_version}/rts-${ghc_rts_ver}/include")
+
+file(COPY ${PROJECT_SOURCE_DIR}/extern/hstherac25/dist-newstyle/build/x86_64-linux/ghc-${ghc_version}/hstherac25-${therac_sim_ver}/build/libHShstherac25-${therac_sim_ver}-inplace-ghc${ghc_version}.so DESTINATION ${CMAKE_BINARY_DIR})
+set(HSTHERAC ${PROJECT_SOURCE_DIR}/extern/hstherac25/dist-newstyle/build/x86_64-linux/ghc-${ghc_version}/hstherac25-${therac_sim_ver}/build/libHShstherac25-${therac_sim_ver}-inplace-ghc${ghc_version}.so)
+set(HSRTS HSrts-${ghc_rts_ver}_thr-ghc${ghc_version})
+find_path(HSLDPATH NAMES "lib${HSRTS}.so" PATH_SUFFIXES "lib/ghc-${ghc_version}/lib/x86_64-linux-ghc-${ghc_version}/")
+set(HSLDFLAGS "-L${HSLDPATH}")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${HSLDFLAGS}")
 add_subdirectory( extern/godot-cpp )
 
 set_target_properties( godot-cpp
@@ -174,9 +162,6 @@ set_target_properties( godot-cpp
 target_link_libraries( ${PROJECT_NAME}
     PRIVATE
         godot-cpp
-        furnace
-        rustex
-        ctre
-        frozen
-        Microsoft.GSL::GSL
+        ${HSTHERAC}
+        ${HSRTS}
 )
