@@ -150,7 +150,7 @@ if ( LINUX )
   set(GHCUPHOME ~/.ghcup)
 elseif (MSVC )
   set(HSPLATFORM x86_64-windows)
-  set(HSSOSUFFIX .dll)
+  set(HSSOSUFFIX .dll.a)
   set(GHCUPHOME C:/GHCUP)
 endif()
 set(GHCEXTRAPATHS ${GHCUPHOME}/ghc/${ghc_version}/)
@@ -178,7 +178,6 @@ set_target_properties( godot-cpp
 target_link_libraries( ${PROJECT_NAME}
     PRIVATE
         godot-cpp
-    PUBLIC
         ${HSTHERAC}
         ${HSRTS}
 )
