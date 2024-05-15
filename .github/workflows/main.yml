@@ -17,8 +17,12 @@ jobs:
 #        with:
 #          clang-format-version: '18'
 #          exclude-regex: 'extern'
-
+  hstherac:
+    uses: ./extern/hstherac25/.github/workflows/build.yml
+    with:
+      subdirectory: extern/hstherac25
   build:
+    needs: hstherac
     strategy:
       fail-fast: false
       matrix:
@@ -36,10 +40,6 @@ jobs:
         uses: actions/checkout@v3
         with:
           submodules: recursive
-      - name: Make hstherac25
-        uses: ./extern/hstherac25/.github/workflows/build.yml
-        with:
-          subdirectory: extern/hstherac25
       - name: get cmake (NOT on mac)
         if: matrix.config.os != 'macos-14'
         uses: lukka/get-cmake@latest
