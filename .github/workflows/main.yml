@@ -18,7 +18,7 @@ jobs:
 #          clang-format-version: '18'
 #          exclude-regex: 'extern'
   hstherac:
-    uses: pillowtrucker/hstherac25/.github/workflows/build.yml@aa7a1bf5a8c9f969e11a16f1bfc16afea02a4143
+    uses: pillowtrucker/hstherac25/.github/workflows/build.yml@00a670a2236a9593ddcff650443296709ee7312d
     with:
       subdirectory: extern/hstherac25
   build:
@@ -42,9 +42,11 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: hstherac-${{ runner.os }}
-          path: extern/hstherac25/dist-newstyle
+          path: extern/hstherac25/
       - name: check artifact path because I'm stupid
-        run: ls -lFh extern/hstherac25/dist-newstyle
+        run: |
+          ls -lFha extern/hstherac25/dist-newstyle/
+          ls -lFha extern/hstherac25/
       - name: get cmake (NOT on mac)
         if: matrix.config.os != 'macos-14'
         uses: lukka/get-cmake@latest
