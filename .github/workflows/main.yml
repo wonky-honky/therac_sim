@@ -44,9 +44,7 @@ jobs:
           name: hstherac-${{ runner.os }}
           path: extern/hstherac25/
       - name: check artifact path because I'm stupid
-        run: |
-          ls -lFha extern/hstherac25/dist-newstyle/
-          ls -lFha extern/hstherac25/
+        run: ls -lFha extern/hstherac25/
       - name: get cmake (NOT on mac)
         if: matrix.config.os != 'macos-14'
         uses: lukka/get-cmake@latest
