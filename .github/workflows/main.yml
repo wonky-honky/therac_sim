@@ -47,6 +47,7 @@ jobs:
           cabal-update: true
 
       - name: Configure the build
+        working-directory: ./extern/hstherac25
         run: |
           cabal configure --enable-tests --enable-benchmarks --disable-documentation
           cabal build all --dry-run
@@ -65,6 +66,7 @@ jobs:
       - name: Install dependencies
         # If we had an exact cache hit, the dependencies will be up to date.
         if: steps.cache.outputs.cache-hit != 'true'
+        working-directory: ./extern/hstherac25
         run: cabal build all --only-dependencies
 
       # Cache dependencies already here, so that we do not have to rebuild them should the subsequent steps fail.
@@ -77,15 +79,17 @@ jobs:
           key: ${{ steps.cache.outputs.cache-primary-key }}
 
       - name: Build
+        working-directory: ./extern/hstherac25
         run: cabal build all
 
       - name: Run tests
         if: ${{ matrix.os }} == 'ubuntu-latest'
+        working-directory: ./extern/hstherac25
         run: cabal test all
       - uses: actions/upload-artifact@v4
         with:
           name: hstherac-${{ runner.os }}
-          path: dist-newstyle
+          path: ./extern/hstherac25/dist-newstyle
 
   build:
     needs: hstherac
