@@ -49,7 +49,7 @@ target_compile_features( ${PROJECT_NAME}
         cxx_std_23
 )
 
-include_directories(${PROJECT_NAME} ${PROJECT_SOURCE_DIR}/extern ${PROJECT_SOURCE_DIR}/extern/furnace/extern/fmt/include ${PROJECT_SOURCE_DIR}/extern/ctre/include ${PROJECT_SOURCE_DIR}/extern/frozen/include ${PROJECT_SOURCE_DIR}/extern/GSL/include)
+include_directories(${PROJECT_NAME} ${PROJECT_SOURCE_DIR}/extern ${PROJECT_SOURCE_DIR}/extern/furnace/extern/fmt/include ${PROJECT_SOURCE_DIR}/extern/ctre/include ${PROJECT_SOURCE_DIR}/extern/frozen/include ${PROJECT_SOURCE_DIR}/extern/GSL/include ${HSINCLUDES})
 # LIB_ARCH is the architecture being built. It is set to the build system's architecture.
 # For macOS, we build a universal library (both arm64 and x86_64).
 set( LIB_ARCH ${CMAKE_SYSTEM_PROCESSOR} )
@@ -154,13 +154,13 @@ endif()
 find_path(HSINCLUDES NAMES "HsFFI.h" PATH_SUFFIXES "lib/ghc-${ghc_version}/lib/x86_64-linux-ghc-${ghc_version}/rts-${ghc_rts_ver}/include" "lib/ghc-${ghc_version}/lib/x86_64-windows-ghc-${ghc_version}/rts-${ghc_rts_ver}/include")
 
 if ( MSVC)
-  set(HSTHERAC ${PROJECT_SOURCE_DIR}/extern/hstherac25/dist-newstyle/build/${HSPLATFORM}/ghc-${ghc_version}/hstherac25-${therac_sim_ver}/f/hstherac25/build/hstherac25/libhstherac25${HSSOSUFFIX})
+  set(HSTHERAC ${PROJECT_SOURCE_DIR}/extern/hstherac25/dist-newstyle/build/${HSPLATFORM}/ghc-${ghc_version}/hstherac25-${therac_sim_ver}/f/hstherac25/build/hstherac25/hstherac25${HSSOSUFFIX})
 elseif ( LINUX )
   set(HSTHERAC ${PROJECT_SOURCE_DIR}/extern/hstherac25/dist-newstyle/build/${HSPLATFORM}/ghc-${ghc_version}/hstherac25-${therac_sim_ver}/build/libHShstherac25-${therac_sim_ver}-inplace-ghc${ghc_version}${HSSOSUFFIX})
 endif()
 file(COPY ${HSTHERAC} DESTINATION ${CMAKE_BINARY_DIR})
 set(HSRTS HSrts-${ghc_rts_ver}_thr-ghc${ghc_version})
-find_path(HSLDPATH NAMES "lib${HSRTS}${HSSOSUFFIX}" PATH_SUFFIXES "lib/ghc-${ghc_version}/lib/${HSPLATFORM}-ghc-${ghc_version}/" "lib/ghc-${ghc_version}/lib/x86_64-mingw32-ghc-${ghc_version}/" "lib/ghc-${ghc_version}/lib/x86_64-mingw64-ghc-${ghc_version}/")
+find_path(HSLDPATH NAMES "lib${HSRTS}${HSSOSUFFIX}" "${HSRTS}${HSSOSUFFIX}" PATH_SUFFIXES "lib/ghc-${ghc_version}/lib/${HSPLATFORM}-ghc-${ghc_version}/" "lib/ghc-${ghc_version}/lib/x86_64-mingw32-ghc-${ghc_version}/" "lib/ghc-${ghc_version}/lib/x86_64-mingw64-ghc-${ghc_version}/")
 set(HSLDFLAGS "-L${HSLDPATH}")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${HSLDFLAGS}")
 add_subdirectory( extern/godot-cpp )
