@@ -1,0 +1,130 @@
+name: Main
+
+on:
+  push:
+    paths-ignore:
+      - '.gitignore'
+      - '*.md'
+
+jobs:
+#  lint:
+#    name: 🧹 Lint / 📜 C++
+#    runs-on: ubuntu-latest
+#    steps:
+#      - uses: actions/checkout@v3
+#      - name: Run clang-format style check
+#        uses: jidicula/clang-format-action@v4.9.0
+#        with:
+#          clang-format-version: '18'
+#          exclude-regex: 'extern'
+
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        build_type: ['Debug', 'Release']
+        config:
+#          - { name: '🍏 macOS Clang', os: macos-14 }
+          - { name: '🐧 Linux Clang', os: ubuntu-latest }
+          - { name: '🪟 Windows MSVC', os: windows-latest }
+
+    name: 🛠 Build / ${{ matrix.config.name }} (${{ matrix.build_type }})
+    runs-on: ${{ matrix.config.os }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+      - name: Make hstherac25
+        uses: extern/hstherac25/.github/workflows/build.yml
+        with:
+          subdirectory: extern/hstherac25
+      - name: get cmake (NOT on mac)
+        if: matrix.config.os != 'macos-14'
+        uses: lukka/get-cmake@latest
+#      - name: Install LLVM and Clang on mac
+#        if: matrix.config.os == 'macos-14'
+#        uses: KyleMayes/install-llvm-action@v2
+#        with:
+#          version: "17"
+#          arch: "arm64"
+#      - name: Install Dependencies (macOS)
+#        if: matrix.config.os == 'macos-14'
+#        run: brew install ccache ninja
+
+      - name: Install lld + clang/llvm on ubuntu
+        if: matrix.config.os == 'ubuntu-latest'
+        uses: KyleMayes/install-llvm-action@v2
+        with:
+          version: "17"
+          
+      - name: Install Dependencies (Linux)
+        if: matrix.config.os == 'ubuntu-latest'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ccache ninja-build git libasound2-dev librtmidi-dev libsndfile1-dev zlib1g-dev libfmt-dev libsdl2-dev
+
+      - name: Install Dependencies (Windows)
+        if: matrix.config.os == 'windows-latest'
+        run: |
+          choco upgrade ccache ninja
+
+      - name: Setup MSVC (Windows)
+        if: matrix.config.os == 'windows-latest'
+        uses: ilammy/msvc-dev-cmd@v1
+
+      - name: ccache
+        uses: hendrikmuhs/ccache-action@v1.2
+        if: matrix.config.os != 'macos-14'
+        with:
+          max-size: '10G'
+          key: ${{ matrix.config.os }}-${{ matrix.build_type }}
+
+      - name: Configure other OSes
+        if: matrix.config.os != 'windows-latest'
+        run: >
+          mkdir therac_sim-build
+
+          cmake
+          -B therac_sim-build
+          -G "Ninja"
+          -DTHERAC_SIM_WARNING_AS_ERROR=OFF
+          -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/cmake/toolchain.cmake
+          -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+          --install-prefix ${{ github.workspace }}/install-${{ matrix.build_type }}
+          .
+      - name: Configure windows
+        if: matrix.config.os == 'windows-latest'
+        run: >
+          mkdir therac_sim-build
+
+          cmake
+          -B therac_sim-build
+          -G "Ninja"
+          -DTHERAC_SIM_WARNING_AS_ERROR=OFF
+          -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+          --install-prefix ${{ github.workspace }}/install-${{ matrix.build_type }}
+          .
+
+      - name: Build
+        run: cmake --build therac_sim-build
+
+      - name: Install
+        run: cmake --install therac_sim-build
+
+      - name: Upload artifact (Debug)
+        if: matrix.build_type == 'Debug'
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ github.event.repository.name }}-Debug
+          path: |
+            ${{ github.workspace }}/install-${{ matrix.build_type }}/*
+
+      - name: Upload artifact (Release)
+        if: matrix.build_type == 'Release'
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ github.event.repository.name }}-Release
+          path: |
+            ${{ github.workspace }}/install-${{ matrix.build_type }}/*
