@@ -158,14 +158,16 @@ find_path(HSINCLUDES NAMES "HsFFI.h" PATH_SUFFIXES "lib/ghc-${ghc_version}/lib/x
 
 if ( MSVC)
   set(HSTHERAC ${PROJECT_SOURCE_DIR}/extern/hstherac25/dist-newstyle/build/${HSPLATFORM}/ghc-${ghc_version}/hstherac25-${therac_sim_ver}/f/hstherac25/build/hstherac25/hstherac25${HSSOSUFFIX})
+  set(HSRTS "")
 elseif ( LINUX )
   set(HSTHERAC ${PROJECT_SOURCE_DIR}/extern/hstherac25/dist-newstyle/build/${HSPLATFORM}/ghc-${ghc_version}/hstherac25-${therac_sim_ver}/build/libHShstherac25-${therac_sim_ver}-inplace-ghc${ghc_version}${HSSOSUFFIX})
+  set(HSRTS HSrts-${ghc_rts_ver}_thr-ghc${ghc_version})
+  set(HSLDFLAGS "-L${HSLDPATH}")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${HSLDFLAGS}")
+  find_path(HSLDPATH NAMES "lib${HSRTS}${HSSOSUFFIX}" "${HSRTS}${HSSOSUFFIX}" PATH_SUFFIXES "lib/ghc-${ghc_version}/lib/${HSPLATFORM}-ghc-${ghc_version}/" "lib/ghc-${ghc_version}/lib/x86_64-mingw32-ghc-${ghc_version}/" "lib/ghc-${ghc_version}/lib/x86_64-mingw64-ghc-${ghc_version}/" HINTS ${GHCEXTRAPATHS})
 endif()
 file(COPY ${HSTHERAC} DESTINATION ${CMAKE_BINARY_DIR})
-set(HSRTS HSrts-${ghc_rts_ver}_thr-ghc${ghc_version})
-find_path(HSLDPATH NAMES "lib${HSRTS}${HSSOSUFFIX}" "${HSRTS}${HSSOSUFFIX}" PATH_SUFFIXES "lib/ghc-${ghc_version}/lib/${HSPLATFORM}-ghc-${ghc_version}/" "lib/ghc-${ghc_version}/lib/x86_64-mingw32-ghc-${ghc_version}/" "lib/ghc-${ghc_version}/lib/x86_64-mingw64-ghc-${ghc_version}/" HINTS ${GHCEXTRAPATHS})
-set(HSLDFLAGS "-L${HSLDPATH}")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${HSLDFLAGS}")
+
 add_subdirectory( extern/godot-cpp )
 
 set_target_properties( godot-cpp
