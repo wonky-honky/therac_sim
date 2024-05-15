@@ -18,7 +18,7 @@ jobs:
 #          clang-format-version: '18'
 #          exclude-regex: 'extern'
   hstherac:
-    uses: pillowtrucker/hstherac25/.github/workflows/build.yml@f946e576ed1ed4f1b67d6bbd529605205ed3b680
+    uses: pillowtrucker/hstherac25/.github/workflows/build.yml@7f6dda82be89517076b0bb51d7ab0451560b84a7
     with:
       subdirectory: extern/hstherac25
   build:
