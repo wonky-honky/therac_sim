@@ -63,13 +63,21 @@ jobs:
         uses: KyleMayes/install-llvm-action@v2
         with:
           version: "17"
-          
+      - name: Set up GHC ${{ matrix.ghc-version }}
+        uses: haskell-actions/setup@v2
+        id: setup
+        with:
+          ghc-version: '9.8'
+          # Defaults, added for clarity:
+          cabal-version: 'latest'
+          cabal-update: true
+    
       - name: Install Dependencies (Linux)
         if: matrix.config.os == 'ubuntu-latest'
         run: |
           sudo apt-get update
           sudo apt-get install -y ccache ninja-build git libasound2-dev librtmidi-dev libsndfile1-dev zlib1g-dev libfmt-dev libsdl2-dev
-
+      
       - name: Install Dependencies (Windows)
         if: matrix.config.os == 'windows-latest'
         run: |
