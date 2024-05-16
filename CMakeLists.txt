@@ -124,7 +124,7 @@ if ( WIN32 )
   set_target_properties(DLLHSTHERAC PROPERTIES
   IMPORTED_LOCATION ${HSTHERACDLL}
   IMPORTED_IMPLIB ${HSTHERAC}
-  INTERFACE_INCLUDE_DIRECTORIES ${HSINCLUDES} ${PROJECT_SOURCE_DIR}/${HSTHERACROOT}/dist-newstyle/build/${HSPLATFORM}/ghc-${ghc_version}/hstherac25-${therac_sim_ver}/build
+  INTERFACE_INCLUDE_DIRECTORIES ${PROJECT_SOURCE_DIR}/${HSTHERACROOT}/dist-newstyle/build/${HSPLATFORM}/ghc-${ghc_version}/hstherac25-${therac_sim_ver}/build
 )
 elseif ( LINUX )
   set(HSTHERAC ${PROJECT_SOURCE_DIR}/${HSTHERACROOT}/dist-newstyle/build/${HSPLATFORM}/ghc-${ghc_version}/hstherac25-${therac_sim_ver}/build/libHShstherac25-${therac_sim_ver}-inplace-ghc${ghc_version}${HSSOSUFFIX})
