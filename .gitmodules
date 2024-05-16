@@ -4,3 +4,9 @@
 [submodule "extern/hstherac25"]
 	path = extern/hstherac25
 	url = https://github.com/pillowtrucker/hstherac25
+[submodule "extern/GSL"]
+	path = extern/GSL
+	url = https://github.com/microsoft/GSL
+[submodule "extern/rustex"]
+	path = extern/rustex
+	url = https://github.com/eoan-ermine/rustex.git

@@ -5,6 +5,8 @@ target_sources( ${PROJECT_NAME}
         GDExtensionTemplate.h
         GDExtensionTemplate.cpp
         RegisterExtension.cpp
+        TheracSimulatorAdapter.hpp
+        TheracSimulatorAdapter.cpp
 )
 
 target_include_directories( ${PROJECT_NAME}

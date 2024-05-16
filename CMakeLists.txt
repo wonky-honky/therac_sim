@@ -49,7 +49,8 @@ target_compile_features( ${PROJECT_NAME}
         cxx_std_23
 )
 
-include_directories(${PROJECT_NAME} ${PROJECT_SOURCE_DIR}/extern ${PROJECT_SOURCE_DIR}/extern/furnace/extern/fmt/include ${PROJECT_SOURCE_DIR}/extern/ctre/include ${PROJECT_SOURCE_DIR}/extern/frozen/include ${PROJECT_SOURCE_DIR}/extern/GSL/include ${HSINCLUDES})
+add_subdirectory(extern/rustex)
+add_subdirectory(extern/GSL)
 # LIB_ARCH is the architecture being built. It is set to the build system's architecture.
 # For macOS, we build a universal library (both arm64 and x86_64).
 set( LIB_ARCH ${CMAKE_SYSTEM_PROCESSOR} )
@@ -98,6 +99,35 @@ include( CompilerWarnings )
 # Create and include version info file from git
 include( GitVersionInfo )
 
+# haskell stuff
+set(ghc_version 9.8.2)
+set(ghc_rts_ver 1.0.2)
+set(therac_sim_ver 0.1.0.0)
+set(HSTHERACROOT extern/hstherac25)
+if ( LINUX )
+  set(HSPLATFORM x86_64-linux)
+  set(HSSOSUFFIX .so)
+  set(GHCUPHOME ~/.ghcup)
+elseif (MSVC )
+  set(HSPLATFORM x86_64-windows)
+  set(HSSOSUFFIX .dll.a)
+  set(GHCUPHOME C:/GHCUP)
+endif()
+set(GHCEXTRAPATHS ${GHCUPHOME}/ghc/${ghc_version}/)
+find_path(HSINCLUDES NAMES "HsFFI.h" PATH_SUFFIXES "lib/ghc-${ghc_version}/lib/x86_64-linux-ghc-${ghc_version}/rts-${ghc_rts_ver}/include" "lib/ghc-${ghc_version}/lib/x86_64-windows-ghc-${ghc_version}/rts-${ghc_rts_ver}/include" HINTS ${GHCEXTRAPATHS})
+
+if ( MSVC)
+  set(HSTHERAC ${PROJECT_SOURCE_DIR}/${HSTHERACROOT}/dist-newstyle/build/${HSPLATFORM}/ghc-${ghc_version}/hstherac25-${therac_sim_ver}/f/hstherac25/build/hstherac25/hstherac25${HSSOSUFFIX})
+  set(HSRTS "")
+elseif ( LINUX )
+  set(HSTHERAC ${PROJECT_SOURCE_DIR}/${HSTHERACROOT}/dist-newstyle/build/${HSPLATFORM}/ghc-${ghc_version}/hstherac25-${therac_sim_ver}/build/libHShstherac25-${therac_sim_ver}-inplace-ghc${ghc_version}${HSSOSUFFIX})
+  set(HSRTS HSrts-${ghc_rts_ver}_thr-ghc${ghc_version})
+  find_path(HSLDPATH NAMES "lib${HSRTS}${HSSOSUFFIX}" "${HSRTS}${HSSOSUFFIX}" PATH_SUFFIXES "lib/ghc-${ghc_version}/lib/${HSPLATFORM}-ghc-${ghc_version}/" "lib/ghc-${ghc_version}/lib/x86_64-mingw32-ghc-${ghc_version}/" "lib/ghc-${ghc_version}/lib/x86_64-mingw64-ghc-${ghc_version}/" HINTS ${GHCEXTRAPATHS})
+  set(HSLDFLAGS "-L${HSLDPATH}")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${HSLDFLAGS}")
+endif()
+#configure_file(${PROJECT_SOURCE_DIR}/src/TheracSimulatorAdapter.hpp.in ${PROJECT_SOURCE_DIR}/src/TheracSimulatorAdapter.hpp)
+include_directories(${PROJECT_NAME} ${PROJECT_SOURCE_DIR}/extern ${PROJECT_SOURCE_DIR}/extern/furnace/extern/fmt/include ${PROJECT_SOURCE_DIR}/extern/ctre/include ${PROJECT_SOURCE_DIR}/extern/frozen/include ${PROJECT_SOURCE_DIR}/extern/GSL/include ${HSINCLUDES} ${PROJECT_SOURCE_DIR}/${HSTHERACROOT}/dist-newstyle/build/${HSPLATFORM}/ghc-${ghc_version}/hstherac25-${therac_sim_ver}/build ${PROJECT_SOURCE_DIR}/extern/GSL/include)
 add_subdirectory( src )
 
 # Install library, extension file, and support files in ${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME}
@@ -140,32 +170,7 @@ endif()
 
 set( GODOT_CPP_SYSTEM_HEADERS ON CACHE BOOL "" FORCE )
 
-# haskell stuff
-set(ghc_version 9.8.2)
-set(ghc_rts_ver 1.0.2)
-set(therac_sim_ver 0.1.0.0)
-if ( LINUX )
-  set(HSPLATFORM x86_64-linux)
-  set(HSSOSUFFIX .so)
-  set(GHCUPHOME ~/.ghcup)
-elseif (MSVC )
-  set(HSPLATFORM x86_64-windows)
-  set(HSSOSUFFIX .dll.a)
-  set(GHCUPHOME C:/GHCUP)
-endif()
-set(GHCEXTRAPATHS ${GHCUPHOME}/ghc/${ghc_version}/)
-find_path(HSINCLUDES NAMES "HsFFI.h" PATH_SUFFIXES "lib/ghc-${ghc_version}/lib/x86_64-linux-ghc-${ghc_version}/rts-${ghc_rts_ver}/include" "lib/ghc-${ghc_version}/lib/x86_64-windows-ghc-${ghc_version}/rts-${ghc_rts_ver}/include" HINTS ${GHCEXTRAPATHS})
 
-if ( MSVC)
-  set(HSTHERAC ${PROJECT_SOURCE_DIR}/extern/hstherac25/dist-newstyle/build/${HSPLATFORM}/ghc-${ghc_version}/hstherac25-${therac_sim_ver}/f/hstherac25/build/hstherac25/hstherac25${HSSOSUFFIX})
-  set(HSRTS "")
-elseif ( LINUX )
-  set(HSTHERAC ${PROJECT_SOURCE_DIR}/extern/hstherac25/dist-newstyle/build/${HSPLATFORM}/ghc-${ghc_version}/hstherac25-${therac_sim_ver}/build/libHShstherac25-${therac_sim_ver}-inplace-ghc${ghc_version}${HSSOSUFFIX})
-  set(HSRTS HSrts-${ghc_rts_ver}_thr-ghc${ghc_version})
-  find_path(HSLDPATH NAMES "lib${HSRTS}${HSSOSUFFIX}" "${HSRTS}${HSSOSUFFIX}" PATH_SUFFIXES "lib/ghc-${ghc_version}/lib/${HSPLATFORM}-ghc-${ghc_version}/" "lib/ghc-${ghc_version}/lib/x86_64-mingw32-ghc-${ghc_version}/" "lib/ghc-${ghc_version}/lib/x86_64-mingw64-ghc-${ghc_version}/" HINTS ${GHCEXTRAPATHS})
-  set(HSLDFLAGS "-L${HSLDPATH}")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${HSLDFLAGS}")
-endif()
 file(COPY ${HSTHERAC} DESTINATION ${CMAKE_BINARY_DIR})
 
 add_subdirectory( extern/godot-cpp )
@@ -178,6 +183,8 @@ set_target_properties( godot-cpp
 target_link_libraries( ${PROJECT_NAME}
     PRIVATE
         godot-cpp
+        rustex
+        Microsoft.GSL::GSL
         ${HSTHERAC}
         ${HSRTS}
 )
