@@ -118,6 +118,7 @@ find_path(HSINCLUDES NAMES "HsFFI.h" PATH_SUFFIXES "lib/ghc-${ghc_version}/lib/$
 
 if ( WIN32 )
   set(HSTHERAC ${PROJECT_SOURCE_DIR}/${HSTHERACROOT}/dist-newstyle/build/${HSPLATFORM}/ghc-${ghc_version}/hstherac25-${therac_sim_ver}/f/hstherac25/build/hstherac25/hstherac25${HSSOSUFFIX})
+  set(HSTHERACDLL ${PROJECT_SOURCE_DIR}/${HSTHERACROOT}/dist-newstyle/build/${HSPLATFORM}/ghc-${ghc_version}/hstherac25-${therac_sim_ver}/f/hstherac25/build/hstherac25/hstherac25.dll)
   set(HSRTS "")
 elseif ( LINUX )
   set(HSTHERAC ${PROJECT_SOURCE_DIR}/${HSTHERACROOT}/dist-newstyle/build/${HSPLATFORM}/ghc-${ghc_version}/hstherac25-${therac_sim_ver}/build/libHShstherac25-${therac_sim_ver}-inplace-ghc${ghc_version}${HSSOSUFFIX})
@@ -172,7 +173,9 @@ set( GODOT_CPP_SYSTEM_HEADERS ON CACHE BOOL "" FORCE )
 
 
 file(COPY ${HSTHERAC} DESTINATION ${CMAKE_BINARY_DIR})
-
+if (WIN32)
+  file(COPY ${HSTHERACDLL} DESTINATION ${CMAKE_BINARY_DIR})
+endif()
 add_subdirectory( extern/godot-cpp )
 
 set_target_properties( godot-cpp
