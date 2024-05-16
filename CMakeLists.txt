@@ -120,6 +120,12 @@ if ( WIN32 )
   set(HSTHERAC ${PROJECT_SOURCE_DIR}/${HSTHERACROOT}/dist-newstyle/build/${HSPLATFORM}/ghc-${ghc_version}/hstherac25-${therac_sim_ver}/f/hstherac25/build/hstherac25/hstherac25${HSSOSUFFIX})
   set(HSTHERACDLL ${PROJECT_SOURCE_DIR}/${HSTHERACROOT}/dist-newstyle/build/${HSPLATFORM}/ghc-${ghc_version}/hstherac25-${therac_sim_ver}/f/hstherac25/build/hstherac25/hstherac25.dll)
   set(HSRTS "")
+  add_library(DLLHSTHERAC SHARED IMPORTED)
+  set_target_properties(DLLHSTHERAC PROPERTIES
+  IMPORTED_LOCATION ${HSTHERACDLL}
+  IMPORTED_IMPLIB ${HSTHERAC}
+  INTERFACE_INCLUDE_DIRECTORIES ${HSINCLUDES}
+)
 elseif ( LINUX )
   set(HSTHERAC ${PROJECT_SOURCE_DIR}/${HSTHERACROOT}/dist-newstyle/build/${HSPLATFORM}/ghc-${ghc_version}/hstherac25-${therac_sim_ver}/build/libHShstherac25-${therac_sim_ver}-inplace-ghc${ghc_version}${HSSOSUFFIX})
   set(HSRTS HSrts-${ghc_rts_ver}_thr-ghc${ghc_version})
@@ -173,15 +179,26 @@ set( GODOT_CPP_SYSTEM_HEADERS ON CACHE BOOL "" FORCE )
 
 
 file(COPY ${HSTHERAC} DESTINATION ${CMAKE_BINARY_DIR})
-if (WIN32)
-  file(COPY ${HSTHERACDLL} DESTINATION ${CMAKE_BINARY_DIR})
-endif()
+
 add_subdirectory( extern/godot-cpp )
 
 set_target_properties( godot-cpp
     PROPERTIES
         CXX_VISIBILITY_PRESET hidden    # visibility needs to be the same as the main library
 )
+
+if (WIN32)
+  file(COPY ${HSTHERACDLL} DESTINATION ${CMAKE_BINARY_DIR})
+  target_link_libraries( ${PROJECT_NAME}
+    PRIVATE
+        godot-cpp
+        rustex
+        Microsoft.GSL::GSL
+        DLLHSTHERAC
+#        ${HSRTS}
+)
+
+else()
 
 target_link_libraries( ${PROJECT_NAME}
     PRIVATE
@@ -191,3 +208,4 @@ target_link_libraries( ${PROJECT_NAME}
         ${HSTHERAC}
         ${HSRTS}
 )
+endif()
