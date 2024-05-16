@@ -114,7 +114,7 @@ elseif (MSVC )
   set(GHCUPHOME C:/GHCUP)
 endif()
 set(GHCEXTRAPATHS ${GHCUPHOME}/ghc/${ghc_version}/)
-find_path(HSINCLUDES NAMES "HsFFI.h" PATH_SUFFIXES "lib/ghc-${ghc_version}/lib/${HSPLATFORM}-ghc-${ghc_version}/rts-${ghc_rts_ver}/include" "ghc/${ghc_version}/lib/${HSPLATFORM}-ghc-${ghc_version}/rts-${ghc_rts_ver}/include" HINTS ${GHCEXTRAPATHS})
+find_path(HSINCLUDES NAMES "HsFFI.h" PATH_SUFFIXES "lib/ghc-${ghc_version}/lib/${HSPLATFORM}-ghc-${ghc_version}/rts-${ghc_rts_ver}/include" "ghc/${ghc_version}/lib/lib/${HSPLATFORM}-ghc-${ghc_version}/rts-${ghc_rts_ver}/include" HINTS ${GHCEXTRAPATHS})
 
 if ( MSVC)
   set(HSTHERAC ${PROJECT_SOURCE_DIR}/${HSTHERACROOT}/dist-newstyle/build/${HSPLATFORM}/ghc-${ghc_version}/hstherac25-${therac_sim_ver}/f/hstherac25/build/hstherac25/hstherac25${HSSOSUFFIX})

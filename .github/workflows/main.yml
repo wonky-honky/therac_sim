@@ -71,6 +71,10 @@ jobs:
           # Defaults, added for clarity:
           cabal-version: 'latest'
           cabal-update: true
+      - name: this is just stupid
+        run: |
+          cd ${{ steps.ghc-setup.outputs.ghc-path }}/..
+          dir /b/s HsFFI.h
 #      - name: Squirt ghc path for RTS shared object
 #        run: tree ${{ steps.ghc-setup.outputs.ghc-path }}/..
       - name: Install Dependencies (Linux)
