@@ -17,12 +17,12 @@ jobs:
 #        with:
 #          clang-format-version: '18'
 #          exclude-regex: 'extern'
-#  hstherac:
-#    uses: pillowtrucker/hstherac25/.github/workflows/build.yml@main
-#    with:
-#      subdirectory: extern/hstherac25
+  hstherac:
+    uses: pillowtrucker/hstherac25/.github/workflows/build.yml@main
+    with:
+      subdirectory: extern/hstherac25
   build:
-#    needs: hstherac
+    needs: hstherac
     strategy:
       fail-fast: false
       matrix:
@@ -35,19 +35,19 @@ jobs:
     name: 🛠 Build / ${{ matrix.config.name }} (${{ matrix.build_type }})
     runs-on: ${{ matrix.config.os }}
     steps:
-#      - name: Checkout
-#        uses: actions/checkout@v3
-#        with:
-#          submodules: recursive
-#      - uses: actions/download-artifact@v4
-#        with:
-#          name: hstherac-${{ runner.os }}
-#          path: extern/hstherac25/dist-newstyle
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+      - uses: actions/download-artifact@v4
+        with:
+          name: hstherac-${{ runner.os }}
+          path: extern/hstherac25/dist-newstyle
 #      - name: check artifact path because I'm stupid
 #        run: tree extern/hstherac25
-#      - name: get cmake (NOT on mac)
-#        if: matrix.config.os != 'macos-14'
-#        uses: lukka/get-cmake@latest
+      - name: get cmake (NOT on mac)
+        if: matrix.config.os != 'macos-14'
+        uses: lukka/get-cmake@latest
 #      - name: Install LLVM and Clang on mac
 #        if: matrix.config.os == 'macos-14'
 #        uses: KyleMayes/install-llvm-action@v2
@@ -58,11 +58,11 @@ jobs:
 #        if: matrix.config.os == 'macos-14'
 #        run: brew install ccache ninja
 
-#      - name: Install lld + clang/llvm on ubuntu
-#        if: matrix.config.os == 'ubuntu-latest'
-#        uses: KyleMayes/install-llvm-action@v2
-#        with:
-#          version: "17"
+      - name: Install lld + clang/llvm on ubuntu
+        if: matrix.config.os == 'ubuntu-latest'
+        uses: KyleMayes/install-llvm-action@v2
+        with:
+          version: "17"
       - name: Set up GHC ${{ matrix.ghc-version }}
         uses: haskell-actions/setup@v2
         id: ghc-setup
@@ -71,10 +71,10 @@ jobs:
           # Defaults, added for clarity:
           cabal-version: 'latest'
           cabal-update: true
-      - name: this is just stupid
-        run: |
-          cd ${{ steps.ghc-setup.outputs.ghc-path }}/..
-          Get-ChildItem -Filter *HsFFI* -Recurse ${{ steps.ghc-setup.outputs.ghc-path }}/..
+#      - name: this is just stupid
+#        run: |
+#          cd ${{ steps.ghc-setup.outputs.ghc-path }}/..
+#          Get-ChildItem -Filter *HsFFI* -Recurse ${{ steps.ghc-setup.outputs.ghc-path }}/..
 #      - name: Squirt ghc path for RTS shared object
 #        run: tree ${{ steps.ghc-setup.outputs.ghc-path }}/..
       - name: Install Dependencies (Linux)
