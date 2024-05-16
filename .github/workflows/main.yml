@@ -35,19 +35,19 @@ jobs:
     name: 🛠 Build / ${{ matrix.config.name }} (${{ matrix.build_type }})
     runs-on: ${{ matrix.config.os }}
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-        with:
-          submodules: recursive
-      - uses: actions/download-artifact@v4
-        with:
-          name: hstherac-${{ runner.os }}
-          path: extern/hstherac25/dist-newstyle
-      - name: check artifact path because I'm stupid
-        run: tree extern/hstherac25
-      - name: get cmake (NOT on mac)
-        if: matrix.config.os != 'macos-14'
-        uses: lukka/get-cmake@latest
+#      - name: Checkout
+#        uses: actions/checkout@v3
+#        with:
+#          submodules: recursive
+#      - uses: actions/download-artifact@v4
+#        with:
+#          name: hstherac-${{ runner.os }}
+#          path: extern/hstherac25/dist-newstyle
+#      - name: check artifact path because I'm stupid
+#        run: tree extern/hstherac25
+#      - name: get cmake (NOT on mac)
+#        if: matrix.config.os != 'macos-14'
+#        uses: lukka/get-cmake@latest
 #      - name: Install LLVM and Clang on mac
 #        if: matrix.config.os == 'macos-14'
 #        uses: KyleMayes/install-llvm-action@v2
@@ -58,11 +58,11 @@ jobs:
 #        if: matrix.config.os == 'macos-14'
 #        run: brew install ccache ninja
 
-      - name: Install lld + clang/llvm on ubuntu
-        if: matrix.config.os == 'ubuntu-latest'
-        uses: KyleMayes/install-llvm-action@v2
-        with:
-          version: "17"
+#      - name: Install lld + clang/llvm on ubuntu
+#        if: matrix.config.os == 'ubuntu-latest'
+#        uses: KyleMayes/install-llvm-action@v2
+#        with:
+#          version: "17"
       - name: Set up GHC ${{ matrix.ghc-version }}
         uses: haskell-actions/setup@v2
         id: ghc-setup
