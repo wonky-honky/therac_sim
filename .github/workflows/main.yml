@@ -71,8 +71,8 @@ jobs:
           # Defaults, added for clarity:
           cabal-version: 'latest'
           cabal-update: true
-      - name: Squirt ghc path for RTS shared object
-        run: tree ${{ steps.ghc-setup.outputs.ghc-path }}/..
+#      - name: Squirt ghc path for RTS shared object
+#        run: tree ${{ steps.ghc-setup.outputs.ghc-path }}/..
       - name: Install Dependencies (Linux)
         if: matrix.config.os == 'ubuntu-latest'
         run: |
