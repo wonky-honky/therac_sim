@@ -120,11 +120,11 @@ if ( WIN32 )
   set(HSTHERAC ${PROJECT_SOURCE_DIR}/${HSTHERACROOT}/dist-newstyle/build/${HSPLATFORM}/ghc-${ghc_version}/hstherac25-${therac_sim_ver}/f/hstherac25/build/hstherac25/hstherac25${HSSOSUFFIX})
   set(HSTHERACDLL ${PROJECT_SOURCE_DIR}/${HSTHERACROOT}/dist-newstyle/build/${HSPLATFORM}/ghc-${ghc_version}/hstherac25-${therac_sim_ver}/f/hstherac25/build/hstherac25/hstherac25.dll)
   set(HSRTS "")
-  add_library(DLLHSTHERAC SHARED IMPORTED)
+  add_library(DLLHSTHERAC SHARED IMPORTED GLOBAL)
   set_target_properties(DLLHSTHERAC PROPERTIES
   IMPORTED_LOCATION ${HSTHERACDLL}
   IMPORTED_IMPLIB ${HSTHERAC}
-  INTERFACE_INCLUDE_DIRECTORIES ${HSINCLUDES}
+  INTERFACE_INCLUDE_DIRECTORIES ${HSINCLUDES} ${PROJECT_SOURCE_DIR}/${HSTHERACROOT}/dist-newstyle/build/${HSPLATFORM}/ghc-${ghc_version}/hstherac25-${therac_sim_ver}/build
 )
 elseif ( LINUX )
   set(HSTHERAC ${PROJECT_SOURCE_DIR}/${HSTHERACROOT}/dist-newstyle/build/${HSPLATFORM}/ghc-${ghc_version}/hstherac25-${therac_sim_ver}/build/libHShstherac25-${therac_sim_ver}-inplace-ghc${ghc_version}${HSSOSUFFIX})
