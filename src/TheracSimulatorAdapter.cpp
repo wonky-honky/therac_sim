@@ -1,3 +1,4 @@
+#pragma comment(lib, "hstherac25.dll")
 #include "TheracSimulatorAdapter.hpp"
 #include <HsTherac25_stub.h>
 #include <cstring>
