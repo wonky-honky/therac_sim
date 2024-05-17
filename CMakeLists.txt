@@ -119,13 +119,14 @@ find_path(HSINCLUDES NAMES "HsFFI.h" PATH_SUFFIXES "lib/ghc-${ghc_version}/lib/$
 if ( WIN32 )
   set(HSTHERAC ${PROJECT_SOURCE_DIR}/${HSTHERACROOT}/dist-newstyle/build/${HSPLATFORM}/ghc-${ghc_version}/hstherac25-${therac_sim_ver}/f/hstherac25/build/hstherac25/hstherac25${HSSOSUFFIX})
   set(HSTHERACDLL ${PROJECT_SOURCE_DIR}/${HSTHERACROOT}/dist-newstyle/build/${HSPLATFORM}/ghc-${ghc_version}/hstherac25-${therac_sim_ver}/f/hstherac25/build/hstherac25/hstherac25.dll)
+  set(HSTHERACARCHIVE ${PROJECT_SOURCE_DIR}/${HSTHERACROOT}/dist-newstyle/build/${HSPLATFORM}/ghc-${ghc_version}/hstherac25-${therac_sim_ver}/build/libHShstherac25-${therac_sim_ver}-inplace-ghc${ghc_version}.a)
   set(HSRTS "")
-  add_library(DLLHSTHERAC SHARED IMPORTED GLOBAL)
-  set_target_properties(DLLHSTHERAC PROPERTIES
-  IMPORTED_LOCATION ${HSTHERACDLL}
-  IMPORTED_IMPLIB ${HSTHERAC}
-  INTERFACE_INCLUDE_DIRECTORIES ${PROJECT_SOURCE_DIR}/${HSTHERACROOT}/dist-newstyle/build/${HSPLATFORM}/ghc-${ghc_version}/hstherac25-${therac_sim_ver}/build
-)
+#  add_library(DLLHSTHERAC SHARED IMPORTED GLOBAL)
+#  set_target_properties(DLLHSTHERAC PROPERTIES
+#  IMPORTED_LOCATION ${HSTHERACDLL}
+#  IMPORTED_IMPLIB ${HSTHERAC}
+#  INTERFACE_INCLUDE_DIRECTORIES ${PROJECT_SOURCE_DIR}/${HSTHERACROOT}/dist-newstyle/build/${HSPLATFORM}/ghc-${ghc_version}/hstherac25-${therac_sim_ver}/build
+#)
 elseif ( LINUX )
   set(HSTHERAC ${PROJECT_SOURCE_DIR}/${HSTHERACROOT}/dist-newstyle/build/${HSPLATFORM}/ghc-${ghc_version}/hstherac25-${therac_sim_ver}/build/libHShstherac25-${therac_sim_ver}-inplace-ghc${ghc_version}${HSSOSUFFIX})
   set(HSRTS HSrts-${ghc_rts_ver}_thr-ghc${ghc_version})
@@ -188,14 +189,15 @@ set_target_properties( godot-cpp
 )
 
 if (WIN32)
-  file(COPY ${HSTHERACDLL} DESTINATION ${CMAKE_BINARY_DIR})
-  link_directories(  ${PROJECT_SOURCE_DIR}/${HSTHERACROOT}/dist-newstyle/build/${HSPLATFORM}/ghc-${ghc_version}/hstherac25-${therac_sim_ver}/f/hstherac25/build/hstherac25/)
+#  file(COPY ${HSTHERACDLL} DESTINATION ${CMAKE_BINARY_DIR})
+#  link_directories(  ${PROJECT_SOURCE_DIR}/${HSTHERACROOT}/dist-newstyle/build/${HSPLATFORM}/ghc-${ghc_version}/hstherac25-${therac_sim_ver}/f/hstherac25/build/hstherac25/)
   target_link_libraries( ${PROJECT_NAME}
     PRIVATE
         godot-cpp
         rustex
         Microsoft.GSL::GSL
-        DLLHSTHERAC
+        ${HSTHERACARCHIVE}
+#        DLLHSTHERAC
 #        ${HSRTS}
 )
 
