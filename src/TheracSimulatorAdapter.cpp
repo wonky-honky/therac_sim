@@ -61,7 +61,7 @@ auto TheracSimulatorAdapter::requestStateInfo(
     StateInfoRequest state_info_request
 ) -> godot::String {
   return static_cast<char const *>(
-      ::requestStateInfo(wrapped_comms, state_info_request)
+      request_state_info(wrapped_comms, state_info_request)
   );
 }
 auto TheracSimulatorAdapter::check_malfunction() -> bool {
