@@ -189,6 +189,7 @@ set_target_properties( godot-cpp
 
 if (WIN32)
   file(COPY ${HSTHERACDLL} DESTINATION ${CMAKE_BINARY_DIR})
+  link_directories(  ${PROJECT_SOURCE_DIR}/${HSTHERACROOT}/dist-newstyle/build/${HSPLATFORM}/ghc-${ghc_version}/hstherac25-${therac_sim_ver}/f/hstherac25/build/hstherac25/)
   target_link_libraries( ${PROJECT_NAME}
     PRIVATE
         godot-cpp

@@ -71,10 +71,9 @@ jobs:
           # Defaults, added for clarity:
           cabal-version: 'latest'
           cabal-update: true
-#      - name: this is just stupid
-#        run: |
-#          cd ${{ steps.ghc-setup.outputs.ghc-path }}/..
-#          Get-ChildItem -Filter *HsFFI* -Recurse ${{ steps.ghc-setup.outputs.ghc-path }}/..
+      - name: this is just stupid
+        run: |
+          Get-ChildItem -Filter *HsTherac25_stub* -Recurse
 #      - name: Squirt ghc path for RTS shared object
 #        run: tree ${{ steps.ghc-setup.outputs.ghc-path }}/..
       - name: Install Dependencies (Linux)
