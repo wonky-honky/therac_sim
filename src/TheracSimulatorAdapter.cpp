@@ -1,4 +1,6 @@
-#pragma comment(lib, "hstherac25.dll")
+#ifdef _WIN32
+#pragma comment(lib, "hstherac25.dll.a")
+#endif
 #include "TheracSimulatorAdapter.hpp"
 #include <HsTherac25_stub.h>
 #include <cstring>

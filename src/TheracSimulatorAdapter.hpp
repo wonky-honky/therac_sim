@@ -1,5 +1,7 @@
 #pragma once
-#pragma comment(lib, "hstherac25.dll")
+#ifdef _WIN32
+#pragma comment(lib, "hstherac25.dll.a")
+#endif
 #include <HsFFI.h>
 #include <godot_cpp/variant/string.hpp>
 #include <shared_mutex>
