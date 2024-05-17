@@ -3,11 +3,11 @@
 #pragma comment(lib, "hstherac25.dll.a")
 #endif
 #include <HsFFI.h>
+#include <Therac.h>
 #include <godot_cpp/variant/string.hpp>
 #include <shared_mutex>
-
 namespace TheracSimulatorAdapter {
-
+/*
 enum ExtCallType {
   CheekyPadding,
   ExtCallSendMEOS,
@@ -38,7 +38,7 @@ enum StateInfoRequest {
   RequestBeamMode,
   RequestBeamEnergy
 };
-
+*/
 class TheracSimulatorAdapter {
 public:
   TheracSimulatorAdapter();
@@ -61,11 +61,11 @@ public:
   auto reset_malfunction() -> bool;
 
 private:
-  static auto
-  hs_init(godot::String const & args = "-threaded +RTS -N -RTS") -> HsStablePtr;
-  static void hs_exit();
+  //  static auto
+  //  hs_init(godot::String const & args = "-threaded +RTS -N -RTS") ->
+  //  HsStablePtr; static void hs_exit();
 
-  void * wrapped_comms;
+  HsStablePtr wrapped_comms;
   bool malfunctioning = false;
   std::shared_mutex malfunctioning_mutex;
 };

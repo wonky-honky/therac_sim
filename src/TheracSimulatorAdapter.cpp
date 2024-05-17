@@ -11,7 +11,7 @@
 #include <ranges>
 namespace TheracSimulatorAdapter {
 using std::ranges::ssize;
-
+/*
 auto TheracSimulatorAdapter::hs_init(godot::String const & args
 ) -> HsStablePtr {
   //  auto _argv   = std::string_view(std::views::split(args, ' '));
@@ -32,11 +32,15 @@ auto TheracSimulatorAdapter::hs_init(godot::String const & args
   ::hs_init(&argc, &argv);
   return ::startMachine();
 }
-TheracSimulatorAdapter::TheracSimulatorAdapter() { wrapped_comms = hs_init(); }
-void TheracSimulatorAdapter::hs_exit() { ::hs_exit(); }
+*/
+TheracSimulatorAdapter::TheracSimulatorAdapter() {
+  wrapped_comms = start_machine();
+}
+// void TheracSimulatorAdapter::hs_exit() { ::hs_exit(); }
 TheracSimulatorAdapter::~TheracSimulatorAdapter() {
-  hs_exit();
+  //  hs_exit();
   wrapped_comms = nullptr;
+  kill_machine();
   delete this;
 }
 void TheracSimulatorAdapter::externalCallWrap(
@@ -45,7 +49,7 @@ void TheracSimulatorAdapter::externalCallWrap(
     CollimatorPosition collimator_position,
     HsInt beam_energy
 ) {
-  ::externalCallWrap(
+  wrap_external_call(
       wrapped_comms,
       ext_call_type,
       beam_type,

@@ -135,7 +135,7 @@ elseif ( LINUX )
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${HSLDFLAGS}")
 endif()
 #configure_file(${PROJECT_SOURCE_DIR}/src/TheracSimulatorAdapter.hpp.in ${PROJECT_SOURCE_DIR}/src/TheracSimulatorAdapter.hpp)
-include_directories(${PROJECT_NAME} ${PROJECT_SOURCE_DIR}/extern ${PROJECT_SOURCE_DIR}/extern/furnace/extern/fmt/include ${PROJECT_SOURCE_DIR}/extern/ctre/include ${PROJECT_SOURCE_DIR}/extern/frozen/include ${PROJECT_SOURCE_DIR}/extern/GSL/include ${HSINCLUDES} ${PROJECT_SOURCE_DIR}/${HSTHERACROOT}/dist-newstyle/build/${HSPLATFORM}/ghc-${ghc_version}/hstherac25-${therac_sim_ver}/build ${PROJECT_SOURCE_DIR}/extern/GSL/include)
+include_directories(${PROJECT_NAME} ${PROJECT_SOURCE_DIR}/extern ${PROJECT_SOURCE_DIR}/extern/furnace/extern/fmt/include ${PROJECT_SOURCE_DIR}/extern/ctre/include ${PROJECT_SOURCE_DIR}/extern/frozen/include ${PROJECT_SOURCE_DIR}/extern/GSL/include ${HSINCLUDES} ${PROJECT_SOURCE_DIR}/${HSTHERACROOT}/dist-newstyle/build/${HSPLATFORM}/ghc-${ghc_version}/hstherac25-${therac_sim_ver}/build ${PROJECT_SOURCE_DIR}/extern/GSL/include ${PROJECT_SOURCE_DIR}/${HSTHERACROOT}/csrc)
 add_subdirectory( src )
 
 # Install library, extension file, and support files in ${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME}
