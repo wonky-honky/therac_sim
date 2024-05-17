@@ -179,7 +179,7 @@ endif()
 set( GODOT_CPP_SYSTEM_HEADERS ON CACHE BOOL "" FORCE )
 
 
-file(COPY ${HSTHERAC} DESTINATION ${CMAKE_BINARY_DIR})
+
 
 add_subdirectory( extern/godot-cpp )
 
@@ -202,7 +202,7 @@ if (WIN32)
 )
 
 else()
-
+file(COPY ${HSTHERAC} DESTINATION ${CMAKE_BINARY_DIR})
 target_link_libraries( ${PROJECT_NAME}
     PRIVATE
         godot-cpp
