@@ -27,6 +27,9 @@ jobs:
       subdirectory: ${{ inputs.therac_sim_subdirectory }}/extern/hstherac25
   build:
     needs: hstherac
+    defaults:
+      run:
+        working-directory: ./${{ inputs.therac_sim_subdirectory }}
     strategy:
       fail-fast: false
       matrix:
