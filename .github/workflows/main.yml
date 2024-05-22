@@ -24,7 +24,7 @@ jobs:
   hstherac:
     uses: pillowtrucker/hstherac25/.github/workflows/build.yml@main
     with:
-      subdirectory: ./${{ inputs.therac_sim_subdirectory }}/extern/hstherac25
+      subdirectory: ${{ inputs.therac_sim_subdirectory }}/extern/hstherac25
   build:
     needs: hstherac
     strategy:
