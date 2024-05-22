@@ -141,7 +141,7 @@ jobs:
         if: matrix.build_type == 'Debug'
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ github.event.repository.name }}-Debug
+          name: therac_sim-Debug
           path: |
             ${{ github.workspace }}/install-${{ matrix.build_type }}/*
 
@@ -149,6 +149,6 @@ jobs:
         if: matrix.build_type == 'Release'
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ github.event.repository.name }}-Release
+          name: therac_sim-Release
           path: |
             ${{ github.workspace }}/install-${{ matrix.build_type }}/*
