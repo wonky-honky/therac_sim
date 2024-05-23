@@ -134,7 +134,7 @@ jobs:
           -B therac_sim-build
           -G "Ninja"
           -DTHERAC_SIM_WARNING_AS_ERROR=OFF
-          -DCMAKE_TOOLCHAIN_FILE=./cmake/toolchain.cmake
+          -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/${{inputs.therac_sim_subdirectory}}/cmake/toolchain.cmake
           -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
           -DCMAKE_INSTALL_PREFIX=install-${{ matrix.build_type }}
           .
