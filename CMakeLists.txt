@@ -128,11 +128,22 @@ if ( WIN32 )
   INTERFACE_INCLUDE_DIRECTORIES ${PROJECT_SOURCE_DIR}/${HSTHERACROOT}/dist-newstyle/build/${HSPLATFORM}/ghc-${ghc_version}/hstherac25-${therac_sim_ver}/build
 )
 elseif ( LINUX )
+
   set(HSTHERAC ${PROJECT_SOURCE_DIR}/${HSTHERACROOT}/dist-newstyle/build/${HSPLATFORM}/ghc-${ghc_version}/hstherac25-${therac_sim_ver}/build/libHShstherac25-${therac_sim_ver}-inplace-ghc${ghc_version}${HSSOSUFFIX})
   set(HSRTS HSrts-${ghc_rts_ver}_thr-ghc${ghc_version})
   find_path(HSLDPATH NAMES "lib${HSRTS}${HSSOSUFFIX}" "${HSRTS}${HSSOSUFFIX}" PATH_SUFFIXES "lib/ghc-${ghc_version}/lib/${HSPLATFORM}-ghc-${ghc_version}/" "lib/ghc-${ghc_version}/lib/x86_64-mingw32-ghc-${ghc_version}/" "lib/ghc-${ghc_version}/lib/x86_64-mingw64-ghc-${ghc_version}/" HINTS ${GHCEXTRAPATHS})
   set(HSLDFLAGS "-L${HSLDPATH}")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${HSLDFLAGS}")
+  add_library (SOHSTHERAC SHARED IMPORTED GLOBAL)
+  set_target_properties(SOHSTHERAC PROPERTIES
+    IMPORTED_LOCATION ${HSTHERAC}
+#    IMPORTED_IMPLIB ${HSTHERAC}
+  )
+  add_library (SOHSRTS SHARED IMPORTED GLOBAL)
+  set_target_properties(SOHSRTS PROPERTIES
+    IMPORTED_LOCATION "${HSLDPATH}/lib${HSRTS}${HSSOSUFFIX}"
+#    IMPORTED_IMPLIB ${HSRTS}
+  )
 endif()
 #configure_file(${PROJECT_SOURCE_DIR}/src/TheracSimulatorAdapter.hpp.in ${PROJECT_SOURCE_DIR}/src/TheracSimulatorAdapter.hpp)
 include_directories(${PROJECT_NAME} ${PROJECT_SOURCE_DIR}/extern ${PROJECT_SOURCE_DIR}/extern/furnace/extern/fmt/include ${PROJECT_SOURCE_DIR}/extern/ctre/include ${PROJECT_SOURCE_DIR}/extern/frozen/include ${PROJECT_SOURCE_DIR}/extern/GSL/include ${HSINCLUDES} ${PROJECT_SOURCE_DIR}/${HSTHERACROOT}/dist-newstyle/build/${HSPLATFORM}/ghc-${ghc_version}/hstherac25-${therac_sim_ver}/build ${PROJECT_SOURCE_DIR}/extern/GSL/include ${PROJECT_SOURCE_DIR}/${HSTHERACROOT}/csrc)
@@ -143,14 +154,23 @@ set( INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME}/" )
 
 message( STATUS "Install directory: ${INSTALL_DIR}")
 
-
+if ( WIN32 )
+install(IMPORTED_RUNTIME_ARTIFACTS DLLHSTHERAC DESTINATION ${INSTALL_DIR}/${LIB_DIR})
 install( TARGETS ${PROJECT_NAME}
     LIBRARY
         DESTINATION ${INSTALL_DIR}/${LIB_DIR}
     RUNTIME
         DESTINATION ${INSTALL_DIR}/${LIB_DIR}
 )
-
+elseif (LINUX)
+install(IMPORTED_RUNTIME_ARTIFACTS SOHSTHERAC SOHSRTS DESTINATION ${INSTALL_DIR}/${LIB_DIR})
+install( TARGETS ${PROJECT_NAME}
+    LIBRARY
+        DESTINATION ${INSTALL_DIR}/${LIB_DIR}
+    RUNTIME
+        DESTINATION ${INSTALL_DIR}/${LIB_DIR}
+)
+endif ()
 # Copy over support files
 install( DIRECTORY "${CMAKE_SOURCE_DIR}/support_files/"
     DESTINATION ${INSTALL_DIR}
@@ -208,7 +228,7 @@ target_link_libraries( ${PROJECT_NAME}
         godot-cpp
         rustex
         Microsoft.GSL::GSL
-        ${HSTHERAC}
-        ${HSRTS}
+        SOHSTHERAC
+        SOHSRTS
 )
 endif()
