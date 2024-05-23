@@ -134,9 +134,9 @@ jobs:
           -B therac_sim-build
           -G "Ninja"
           -DTHERAC_SIM_WARNING_AS_ERROR=OFF
-          -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/cmake/toolchain.cmake
+          -DCMAKE_TOOLCHAIN_FILE=cmake/toolchain.cmake
           -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
-          --install-prefix ${{ github.workspace }}/install-${{ matrix.build_type }}
+          --install-prefix install-${{ matrix.build_type }}
           .
       - name: Configure windows
         if: matrix.config.os == 'windows-latest'
@@ -148,7 +148,7 @@ jobs:
           -G "Ninja"
           -DTHERAC_SIM_WARNING_AS_ERROR=OFF
           -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
-          --install-prefix ${{ github.workspace }}/install-${{ matrix.build_type }}
+          --install-prefix install-${{ matrix.build_type }}
           .
 
       - name: Build
@@ -168,7 +168,7 @@ jobs:
         with:
           name: therac_sim-Debug
           path: |
-            ${{ github.workspace }}/install-${{ matrix.build_type }}/*
+            install-${{ matrix.build_type }}/*
 
       - name: Upload artifact (Release)
         if: matrix.build_type == 'Release'
@@ -176,4 +176,4 @@ jobs:
         with:
           name: therac_sim-Release
           path: |
-            ${{ github.workspace }}/install-${{ matrix.build_type }}/*
+            install-${{ matrix.build_type }}/*
