@@ -140,6 +140,7 @@ jobs:
         if: matrix.config.os == 'ubuntu-latest'
         run: |
           wget https://github.com/linuxdeploy/linuxdeploy/releases/download/1-alpha-20240109-1/linuxdeploy-static-x86_64.AppImage
+          chmod a+x ./linuxdeploy-static-x86_64.AppImage
           ./linuxdeploy-static-x86_64.AppImage --appdir install-${{ matrix.build_type}} --deploy-deps-only=./install-${{ matrix.build_type}}/therac_sim/lib/Linux-x86_64
 #          mv ./install-${{ matrix.build_type}}/usr/lib/* ./install-${{ matrix.build_type}}/therac_sim/lib/Linux-x86_64/
       - name: Upload artifact (Debug)
