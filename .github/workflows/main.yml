@@ -168,7 +168,7 @@ jobs:
         with:
           name: therac_sim-Debug
           path: |
-            install-${{ matrix.build_type }}/*
+            ${{ github.workspace }}/${{ inputs.therac_sim_subdirectory }}/install-${{ matrix.build_type }}/*
 
       - name: Upload artifact (Release)
         if: matrix.build_type == 'Release'
@@ -176,4 +176,4 @@ jobs:
         with:
           name: therac_sim-Release
           path: |
-            install-${{ matrix.build_type }}/*
+            ${{ github.workspace }}/${{ inputs.therac_sim_subdirectory }}/install-${{ matrix.build_type }}/*
