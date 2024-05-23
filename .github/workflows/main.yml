@@ -71,6 +71,7 @@ jobs:
         with:
           version: "17"
       - name: Set up GHC ${{ matrix.ghc-version }}
+        if: ${{ matrix.config.os == 'ubuntu-latest' }}
         uses: haskell-actions/setup@v2
         id: ghc-setup
         with:
@@ -78,6 +79,25 @@ jobs:
           # Defaults, added for clarity:
           cabal-version: 'latest'
           cabal-update: true
+      - name: Configure the build
+        if: ${{ matrix.config.os == 'ubuntu-latest' }}
+        run: |
+          cd extern/hstherac25
+          cabal configure --enable-tests --enable-benchmarks --disable-documentation --enable-shared --disable-static
+          cabal build all --dry-run
+        # The last step generates dist-newstyle/cache/plan.json for the cache key.
+
+      - name: Restore cached dependencies
+        if: ${{ matrix.config.os == 'ubuntu-latest' }}
+        uses: actions/cache/restore@v4
+        id: cache
+        env:
+          key: ${{ runner.os }}-ghc-${{ steps.ghc-setup.outputs.ghc-version }}-cabal-${{ steps.ghc-setup.outputs.cabal-version }}
+        with:
+          path: ${{ steps.ghc-setup.outputs.cabal-store }}
+          key: ${{ env.key }}-plan-${{ hashFiles('**/plan.json') }}
+          restore-keys: ${{ env.key }}-
+
 #      - name: this is just stupid
 #        run: |
 #          Get-ChildItem -Filter *HsTherac25_stub* -Recurse
@@ -142,7 +162,6 @@ jobs:
           wget https://github.com/linuxdeploy/linuxdeploy/releases/download/1-alpha-20240109-1/linuxdeploy-static-x86_64.AppImage
           chmod a+x ./linuxdeploy-static-x86_64.AppImage
           ./linuxdeploy-static-x86_64.AppImage --appdir install-${{ matrix.build_type}} --deploy-deps-only=./install-${{ matrix.build_type}}/therac_sim/lib/Linux-x86_64
-#          mv ./install-${{ matrix.build_type}}/usr/lib/* ./install-${{ matrix.build_type}}/therac_sim/lib/Linux-x86_64/
       - name: Upload artifact (Debug)
         if: matrix.build_type == 'Debug'
         uses: actions/upload-artifact@v3
