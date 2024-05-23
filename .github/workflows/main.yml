@@ -49,7 +49,7 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: hstherac-${{ runner.os }}
-          path: extern/hstherac25/dist-newstyle
+          path: ${{ github.workspace }}/${{ inputs.therac_sim_subdirectory }}/extern/hstherac25/dist-newstyle
 #      - name: check artifact path because I'm stupid
 #        run: tree extern/hstherac25
       - name: get cmake (NOT on mac)
