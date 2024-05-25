@@ -2,8 +2,6 @@
 
 target_sources( ${PROJECT_NAME}
     PRIVATE
-        GDExtensionTemplate.h
-        GDExtensionTemplate.cpp
         RegisterExtension.cpp
         TheracSimulatorAdapter.hpp
         TheracSimulatorAdapter.cpp

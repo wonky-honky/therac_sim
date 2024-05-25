@@ -6,8 +6,6 @@
 #include "godot_cpp/core/defs.hpp"
 #include "godot_cpp/godot.hpp"
 
-#include "GDExtensionTemplate.h"
-
 /// @file
 /// Register our classes with Godot.
 
@@ -21,8 +19,6 @@ void initializeExtension(godot::ModuleInitializationLevel p_level) {
   if (p_level != godot::MODULE_INITIALIZATION_LEVEL_SCENE) {
     return;
   }
-
-  godot::ClassDB::register_class<GDExtensionTemplate>();
 }
 
 /// @brief Called by Godot to let us do any cleanup.
