@@ -161,8 +161,9 @@ jobs:
         run: |
           wget https://github.com/linuxdeploy/linuxdeploy/releases/download/1-alpha-20240109-1/linuxdeploy-static-x86_64.AppImage
           chmod a+x ./linuxdeploy-static-x86_64.AppImage
+          #          cp -rf ./install-${{ matrix.build_type}}/usr/lib/* ./install-${{ matrix.build_type}}/therac_sim/lib/Linux-x86_64/
           ./linuxdeploy-static-x86_64.AppImage --appdir install-${{ matrix.build_type}} --deploy-deps-only=./install-${{ matrix.build_type}}/therac_sim/lib/Linux-x86_64
-          ./linuxdeploy-static-x86_64.AppImage --appdir install-${{ matrix.build_type}} --deploy-deps-only=./install-${{ matrix.build_type}}/usr/lib
+          #          ./linuxdeploy-static-x86_64.AppImage --appdir install-${{ matrix.build_type}} --deploy-deps-only=./install-${{ matrix.build_type}}/usr/lib
       - name: Upload artifact (Debug)
         if: matrix.build_type == 'Debug'
         uses: actions/upload-artifact@v4
