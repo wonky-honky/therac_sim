@@ -166,7 +166,7 @@ elseif (LINUX)
 install(IMPORTED_RUNTIME_ARTIFACTS SOHSTHERAC SOHSRTS DESTINATION ${INSTALL_DIR}/${LIB_DIR})
 set_target_properties(${PROJECT_NAME}
        PROPERTIES
-       LINK_FLAGS "-Wl,-rpath,\\\$ORIGIN/../../../usr/lib"
+       LINK_FLAGS "-Wl,-rpath,\\\$ORIGIN/../../../usr/lib:\\\$ORIGIN"
 )
 install( TARGETS ${PROJECT_NAME}
     LIBRARY
