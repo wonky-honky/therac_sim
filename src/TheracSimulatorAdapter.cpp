@@ -8,9 +8,7 @@
 #include <godot_cpp/variant/string.hpp>
 #include <gsl/gsl>
 #include <mutex>
-#include <ranges>
 namespace TheracSimulatorAdapter {
-using std::ranges::ssize;
 /*
 auto TheracSimulatorAdapter::hs_init(godot::String const & args
 ) -> HsStablePtr {
