@@ -136,6 +136,7 @@ jobs:
           -DTHERAC_SIM_WARNING_AS_ERROR=OFF
           -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/${{inputs.therac_sim_subdirectory}}/cmake/toolchain.cmake
           -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+          -DFLOAT_PRECISION=double
           -DCMAKE_INSTALL_PREFIX=install-${{ matrix.build_type }}
           .
       - name: Configure windows
@@ -148,6 +149,7 @@ jobs:
           -G "Ninja"
           -DTHERAC_SIM_WARNING_AS_ERROR=OFF
           -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+          -DFLOAT_PRECISION=double
           -DCMAKE_INSTALL_PREFIX=install-${{ matrix.build_type }}
           .
 
